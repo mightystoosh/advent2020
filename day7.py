@@ -75,20 +75,6 @@ def traverse_master(master, my_bag, ignored = [], count = 0):
             count += traverse_master(new_master, bag, ignored)
     return count
 
-def traverse_master_with_counts(master, my_bag, ignored = [], count = 0):
-    if master is None:
-        return count
-    for bag in master:
-        if my_bag in master[bag]:
-            if bag not in ignored:
-                count += 1
-            new_master = master.copy()
-            del new_master[bag]
-            ignored.append(bag)
-            count += traverse_master(new_master, bag, ignored)
-    return count
-
-
 def count_bags(master, my_bag, ignored = [], count = 1):
     if master is None:
         return count
