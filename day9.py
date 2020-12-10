@@ -36,33 +36,28 @@ def read_file(filename):
 
 
 def find_sum(data, to_find, length=2):
-    print(data)
+    # print(data)
     for i, d in enumerate(data):
-        print(data[i: i + length])
-        if sum(data[i: i + length]) == to_find:
-            return min(data[i: i + length]), max(data[i:i + length])
-        elif sum(data[i:i + length]) > to_find:
+      for x in range(0, len(data)):
+        if i + length + x > len(data):
+          break
+        # print(data[i : i + length + x])
+        if sum(data[i : i + length + x]) == to_find:
+            return data[i : i + length + x]
+        elif sum(data[i + x: i + length]) > to_find:
             continue
-        else:
-             find_sum(data[i: length + 1], to_find, length + 1)
+    data.pop(0)
+    return find_sum(data, to_find, length + 1)
 
-
-import sys
 
 def findPairs(lst, K, combo=2):
-    if combo >= len(lst) -1:
+    if combo > len(lst):
         yield None
     find_combo = [pair for pair in itertools.combinations(lst, combo) if sum(pair) == K]
     if find_combo != []:
         yield find_combo
     else:
         yield from findPairs(lst, K ,combo + 1)
-        #return findPairs(lst, K, combo + 1)
-
-# def chunks(lst, n):
-#     """Yield successive n-sized chunks from lst."""
-#     for i in range(0, len(lst), n):
-#         yield lst[i:i + n]
 
 def part1(data, length):
     data_find_answer = []
@@ -91,16 +86,6 @@ def part1(data, length):
     return search
 
 
-def subset_sum(numbers, target, partial=[], partial_sum=0):
-    if partial_sum == target:
-        yield partial
-    if partial_sum >= target:
-        return
-    for i, n in enumerate(numbers):
-        remaining = numbers[i + 1:]
-        yield from subset_sum(remaining, target, partial + [n], partial_sum + n)
-
-
 if __name__ == '__main__':
 
     data = read_file('day9-input.txt')
@@ -114,52 +99,11 @@ if __name__ == '__main__':
     search = part1(data, length)
 
     print("PART1:", search)
-    print("PART2:")
-    #t = find_sum(data, search)
+    print("-----")
+    t = find_sum(data, search)
 
     #t = findPairs(data, search)
-    #print(t)
-
-    combo = 2
-
-    data = data[0: data.index(search)]
-    data = [d for d in data if d <= search/2]
-    print(len(data))
-
-    import pprint, time
-    result = findPairs(data, search)
-    #result = subset_sum(data, search)
-
-    my_list = next(result)
-
+    print("T:", t)
+    my_list = t
     print(my_list, min(my_list), max(my_list), min(my_list) + max(my_list))
-    #
-    # t = None
-    # splits = 10
-    # while t is None:
-    #     if splits >= len(data):
-    #         break
-    #     print("splits: ", splits)
-    #     chunky = (list(chunks(data, splits)))
-    #     for d in chunky:
-    #         for c in range(2, splits):
-    #             print(c)
-    #             t = findPairs(data, search, c)
-    #             if t:
-    #                 break
-    #         if t:
-    #             break
-    #         else:
-    #             splits += 5
-    #
-    # print(t)
-
-    # executor = concurrent.futures.ProcessPoolExecutor(10)
-    # futures = [executor.submit(findPairs, data, search, combo) for combo in range(2, len(data))]
-    # #print (len(futures))
-    # concurrent.futures.wait(futures)
-
-
-
-    #print(min(found) + max(found))
-    # use data[e] and get a set of at least two numbers that add to this value
+    print("PART 2:", min(my_list) + max(my_list))
